@@ -44,9 +44,10 @@ namespace Novell.Directory.Ldap.NETStandard.FunctionalTests
                 ldapConnection =>
                 {
                     var entries = new List<LdapEntry>();
+                    var sortControl = new LdapSortControl(new LdapSortKey("cn"), true);
                     for (var i = 0; i < pages; i++)
                     {
-                        searchConstraints.SetControls(BuildLdapVirtualListControl(i+1, pageSize));
+                        searchConstraints.SetControls(new LdapControl[] { BuildLdapVirtualListControl(i+1, pageSize), sortControl });
                         var lsc = ldapConnection.Search(TestsConfig.LdapServer.BaseDn, LdapConnection.ScopeSub, "cn=" + cnPrefix + "*", null, false, searchConstraints);
                         entries.AddRange(lsc.ToList());
                     }
